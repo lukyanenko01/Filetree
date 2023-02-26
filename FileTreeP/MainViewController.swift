@@ -19,8 +19,8 @@ class MainViewController: UIViewController {
         
     private lazy var listCVLayout: UICollectionViewFlowLayout = {
         let collectionFlowLayout = UICollectionViewFlowLayout()
-        collectionFlowLayout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
-        collectionFlowLayout.itemSize = CGSize(width: view.bounds.width, height: 80)
+        collectionFlowLayout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        collectionFlowLayout.itemSize = CGSize(width: view.frame.width - 20, height: 80)
         collectionFlowLayout.minimumInteritemSpacing = 6
         collectionFlowLayout.minimumLineSpacing = 6
         collectionFlowLayout.scrollDirection = .vertical
@@ -30,10 +30,13 @@ class MainViewController: UIViewController {
     private lazy var gridCVLayout: UICollectionViewFlowLayout = {
         let collectionFlowLayout = UICollectionViewFlowLayout()
         collectionFlowLayout.scrollDirection = .vertical
-        collectionFlowLayout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
-        collectionFlowLayout.itemSize = CGSize(width: (view.bounds.width - 90) / 4 , height: view.bounds.height*0.10)
-        collectionFlowLayout.minimumInteritemSpacing = 20
-        collectionFlowLayout.minimumLineSpacing = 20
+        collectionFlowLayout.sectionInset = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 6)
+        
+        let width = view.frame.width / 3.2
+        var heigth = view.frame.height / 6.2
+        collectionFlowLayout.itemSize = CGSize(width: width, height: heigth)
+        collectionFlowLayout.minimumInteritemSpacing = 6
+        collectionFlowLayout.minimumLineSpacing = 6
         return collectionFlowLayout
     }()
     
@@ -107,6 +110,9 @@ class MainViewController: UIViewController {
         listCV.performBatchUpdates(nil, completion: nil)
         listCV.startInteractiveTransition(to: isListView ? self.listCVLayout : self.gridCVLayout, completion: nil)
         listCV.finishInteractiveTransition()
+        
+        NotificationCenter.default.post(name: .isListViewChanged, object: isListView)
+
     }
     
     @objc private func profileButtonAction() {
@@ -123,17 +129,13 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FileCell.id, for: indexPath) as? FileCell else { return UICollectionViewCell() }
         cell.setup(product: files[indexPath.row])
-
-        
-        if !isListView {
-            cell.viewBacgraund.stacImageName.axis = .vertical
-            collectionView.reloadData()
-        } else {
-            cell.viewBacgraund.stacImageName.axis = .horizontal
-            collectionView.reloadData()
-        }
         return cell
+        
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        print("TAP")
+    }
     
 }
