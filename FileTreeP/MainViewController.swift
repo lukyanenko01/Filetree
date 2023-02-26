@@ -10,12 +10,26 @@ import UIKit
 class MainViewController: UIViewController {
     
   
-   
+   private var files = [File]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupNavigationBar()
+        getProduct()
+    }
+    
+    //MARK: - DataBase
+    private func getProduct() {
+        DataBaseService.shared.getProducts { [self] result in
+            switch result {
+            case .success(let products):
+                files = products
+                print(files)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
 
 
